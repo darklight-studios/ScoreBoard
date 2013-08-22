@@ -20,6 +20,7 @@ All responses are sent as valid JSON.
 * **Status**
     * **201**: success
     * **400**: 'name' was not received in the query
+    * **404**: the name is invalid
     * **409**: the specified name is already in use
 
 ### /api/:session_name/update
