@@ -11,8 +11,11 @@ All responses are sent as valid JSON.
 ## Endpoints
 ### /api/:session_name/auth
 * **Function**
-    * Create a new team with the given name
-    * Generate a key for the team, which is returned
+	* If the team does not already exist
+    	* Create a new team with the given name
+    	* Generate a key for the team, which is returned
+	* If the team does exist
+		* Return the team's unique key
 * **Query**
     * **name:** team/individual name
 * **Response**
