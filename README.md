@@ -26,7 +26,7 @@ All responses are sent as valid JSON.
     * **404**: the name is invalid
     * **409**: the specified name is already in use
 
-### /api/:session_name/update
+### /api/update
 * **Function**
     * Update a team's score and found issues
 * **Query**
