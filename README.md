@@ -21,7 +21,8 @@ All responses are sent as valid JSON.
 * **Response**
     * **key:** a 512-bit unique key to use for future requests
 * **Status**
-    * **201**: success
+	* **200**: success (team was fetched)
+    * **201**: success (the team was created)
     * **400**: 'name' was not received in the query
     * **404**: the name is invalid
     * **409**: the specified name is already in use
@@ -35,7 +36,7 @@ All responses are sent as valid JSON.
 * **Response**
     * **description:** if the request failed, this will have a description of the failure, or a stacktrace
 * **Status**
-    * **200**: nothing was changed
+    * **200**: success (nothing was changed)
     * **201**: success
     * **404**: the key is invalid
     * **500**: the issues list is improperly formatted
