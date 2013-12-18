@@ -3,6 +3,8 @@ ScoreBoard
 
 Plugin for Darklight Nova Core to report scores to a web server
 
+# Note that this plugin is a work in progress, and is not ready for use yet
+
 # API Spec
 This is the specification of the API that this plugin requires (implemented in [Darklight Nova Web](https://github.com/darklight-studios/darklight-nova-web)
 
