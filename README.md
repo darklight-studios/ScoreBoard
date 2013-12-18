@@ -26,13 +26,15 @@ All responses are sent as valid JSON.
     * **400**: 'name' was not received in the query
     * **404**: the name is invalid
     * **409**: the specified name is already in use
+* **Sample Query**
+    * https://darklight-nova-web.herokuapp.com/api/testsession/auth?name=teamname
 
 ### /api/update
 * **Function**
     * Update a team's score and found issues
 * **Query**
     * **key:** team's unique key returned from auth
-    * **issues:** JSON list of found issues
+    * **issues:** JSON object of found issues
 * **Response**
     * **description:** if the request failed, this will have a description of the failure, or a stacktrace
 * **Status**
@@ -40,3 +42,6 @@ All responses are sent as valid JSON.
     * **201**: success
     * **404**: the key is invalid
     * **500**: the issues list is improperly formatted
+* **Sample Query**
+    * https://darklight-nova-web.herokuapp.com/api/update?key=keyreturnedfromauth&issues={"issue1": "description of issue1"}
+    * Note that the URL must be properly encoded
