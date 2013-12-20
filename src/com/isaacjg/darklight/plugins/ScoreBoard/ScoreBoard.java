@@ -24,8 +24,8 @@ import com.ijg.darklight.sdk.core.Plugin;
 import com.ijg.darklight.sdk.utils.JaJ.JsonPrimitive;
 import com.ijg.darklight.sdk.utils.JaJ.JsonString;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.util.Scanner;
 
 /**
  * ScoreBoard is a plugin for Darklight Nova Core that allows
@@ -35,17 +35,34 @@ import java.util.Map;
  * @author Isaac Grant
  */
 public class ScoreBoard extends Plugin {
+    private NamePrompt namePrompt;
+
     private String name;
     private String protocol, server, session;
-    private String sessionKey;
+    private String key;
 
     public ScoreBoard(AccessHandler accessHandler) {
         super(accessHandler);
+        namePrompt = new NamePrompt();
+    }
+
+    public void setValidNames(String[] validNames) {
+        namePrompt.setValidNames(validNames);
     }
 
     @Override
     protected void start() {
+        namePrompt.prompt();
+        name = namePrompt.getName();
 
+        if (getKey()) {
+            if (update()) {
+                System.out.println("[ScoreBoard] Successfully authorized with the DNW server");
+            }
+        } else {
+            auth();
+        }
+        namePrompt = null;
     }
 
     @Override
@@ -63,7 +80,7 @@ public class ScoreBoard extends Plugin {
         switch ((int) statusCode) {
             case 200:
             case 201:
-                sessionKey = ((JsonString) request.get("key")).getData();
+                key = ((JsonString) request.get("key")).getData();
                 retrVal = true;
                 break;
             case 400: System.out.println("[ScoreBoard] Error: bad auth request, status 400");
@@ -88,8 +105,8 @@ public class ScoreBoard extends Plugin {
         }
         issueString += '\"' + issues[issues.length-1].getName() + "\": \"" + issues[issues.length-1].getDescription() + "\"}";
 
-        APIRequest request = new APIRequest(protocol, server, "/api/update", "key=" + sessionKey + "&issues=" + issueString);
-        request.send();;
+        APIRequest request = new APIRequest(protocol, server, "/api/update", "key=" + key + "&issues=" + issueString);
+        request.send();
 
         long statusCode = ((JsonPrimitive) request.get("status")).getData();
         switch ((int) statusCode) {
@@ -108,12 +125,36 @@ public class ScoreBoard extends Plugin {
         return retrVal;
     }
 
-    private String makeQueryString(HashMap<String, String> parameters) {
-        StringBuilder query = new StringBuilder();
-        for (Map.Entry<String, String> pair : parameters.entrySet()) {
-            query.append(pair.getKey() + "=" + pair.getValue() + "&");
+    private boolean writeKey() {
+        if (!key.isEmpty()) {
+            File keyFile = new File("key");
+            FileWriter out = null;
+            try {
+                out = new FileWriter(keyFile, false);
+                out.write(key);
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return true;
+        } else {
+            System.out.println("[ScoreBoard] Error: Attempted to write an empty key");
         }
-        return query.toString();
+        return false;
+    }
+
+    private boolean getKey() {
+        key = "";
+        File keyFile = new File("key");
+        try {
+            Scanner scanner = new Scanner(keyFile);
+            key = scanner.nextLine().trim();
+        } catch (FileNotFoundException e) {
+            System.out.println("[ScoreBoard] Error: Key file not found");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public void setTeamName(String name) { this.name = name; }
