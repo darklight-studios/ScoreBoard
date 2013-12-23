@@ -78,7 +78,7 @@ public class NamePrompt {
                     System.out.println("[ScoreBoard] No name was input, terminating...");
                     System.exit(0);
                 }
-                System.out.println("[ScoreBoard] Error on name prompt");
+                System.out.println("[ScoreBoard] Fatal error on name prompt");
                 e.printStackTrace();
                 prompt();
                 return;
@@ -108,8 +108,7 @@ public class NamePrompt {
             setName(scanner.nextLine().trim());
             retr = true;
         } catch (FileNotFoundException e) {
-            System.out.println("[ScoreBoard] Error: name file not found");
-            e.printStackTrace();
+            System.out.println("[ScoreBoard] Error (non fatal): name file not found");
         }
         return retr;
     }
@@ -125,6 +124,7 @@ public class NamePrompt {
             out.write(name);
             out.close();
             System.out.println("[ScoreBoard] Wrote \"" + name + "\" to the name file");
+            return;
         }
         throw new IOException("[ScoreBoard] Could not write name to name file");
     }
@@ -135,7 +135,7 @@ public class NamePrompt {
      * @return True if the name was valid and successfully set, otherwise false
      */
     private boolean setName(String name) {
-        if (validNames.length > 0) {
+        if (validNames != null && validNames.length > 0) {
             for (String validName : validNames) {
                 if (name.equals(validName)) {
                     System.out.println("[ScoreBoard] Set name: \"" + name + "\"");

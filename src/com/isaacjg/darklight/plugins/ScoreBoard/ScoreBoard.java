@@ -73,6 +73,7 @@ public class ScoreBoard extends Plugin {
             }
         } else {
             auth();
+            writeKey();
         }
         namePrompt = null;
     }
@@ -121,7 +122,8 @@ public class ScoreBoard extends Plugin {
         for (int i = 0; i < issues.length-1; i++) {
             issueString += '\"' + issues[i].getName() + "\": \"" + issues[i].getDescription() + "\", ";
         }
-        issueString += '\"' + issues[issues.length-1].getName() + "\": \"" + issues[issues.length-1].getDescription() + "\"}";
+        if (issues.length > 0) issueString += '\"' + issues[issues.length-1].getName() + "\": \"" + issues[issues.length-1].getDescription() + "\"}";
+        else issueString += "}";
 
         APIRequest request = new APIRequest(protocol, server, "/api/update", "key=" + key + "&issues=" + issueString);
         request.send();
@@ -160,7 +162,7 @@ public class ScoreBoard extends Plugin {
             }
             return true;
         } else {
-            System.out.println("[ScoreBoard] Error: Attempted to write an empty key");
+            System.out.println("[ScoreBoard] Error (non fatal): Attempted to write an empty key");
         }
         return false;
     }
@@ -176,8 +178,7 @@ public class ScoreBoard extends Plugin {
             Scanner scanner = new Scanner(keyFile);
             key = scanner.nextLine().trim();
         } catch (FileNotFoundException e) {
-            System.out.println("[ScoreBoard] Error: Key file not found");
-            e.printStackTrace();
+            System.out.println("[ScoreBoard] Error (non fatal): Key file not found");
             return false;
         }
         return true;
