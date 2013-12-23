@@ -26,21 +26,44 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Handle retrieving team name
+ * First this tries to read the name from the name file, and if the
+ * name file does not exist or contains an invalid name, a name prompt
+ * will be displayed
+ */
 public class NamePrompt {
     private static String DEFAULT = "{unset}";
 
     private String[] validNames;
     private String name = DEFAULT;
 
+    /**
+     * Default constructor
+     */
     public NamePrompt() {}
+
+    /**
+     * Constructor with valid names as a parameter, so {@link #setValidNames(String[])} does not need to be subsequently called
+     * @param validNames Array of valid team names to use
+     */
     public NamePrompt(String[] validNames) {
         this.validNames = validNames;
     }
 
+    /**
+     * Set valid team names, if this is not called then validation is not used
+     * @param validNames Array of valid team names to use
+     */
     public void setValidNames(String[] validNames) {
         this.validNames = validNames;
     }
 
+    /**
+     * Name prompt
+     * First checks if a valid name can be read from the name file, if not then
+     * it will prompt for a team name, and will save the input name
+     */
     public void prompt() {
         if (readName()) {
             if (!name.equals(DEFAULT)) {
@@ -74,6 +97,10 @@ public class NamePrompt {
         }
     }
 
+    /**
+     * Read the name file
+     * @return True if a valid name is found, otherwise false
+     */
     private boolean readName() {
         File nameFile = new File("name");
         boolean retr = false;
@@ -87,6 +114,10 @@ public class NamePrompt {
         return retr;
     }
 
+    /**
+     * Write the team name to the name file
+     * @throws IOException If there was an error writing the file
+     */
     private void writeName() throws IOException {
         if (!name.equals(DEFAULT)) {
             File nameFile = new File("name");
@@ -98,6 +129,11 @@ public class NamePrompt {
         throw new IOException("[ScoreBoard] Could not write name to name file");
     }
 
+    /**
+     * Check validity and set the team name
+     * @param name The desired team name
+     * @return True if the name was valid and successfully set, otherwise false
+     */
     private boolean setName(String name) {
         if (validNames.length > 0) {
             for (String validName : validNames) {
@@ -116,6 +152,9 @@ public class NamePrompt {
         return false;
     }
 
+    /**
+     * @return Team name
+     */
     public String getName() {
         return name;
     }

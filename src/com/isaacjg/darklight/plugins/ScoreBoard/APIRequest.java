@@ -28,6 +28,9 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Utility class to make it easier to deal with API interaction
+ */
 public class APIRequest {
     private URI requestURI;
     private URL requestURL;
@@ -35,6 +38,13 @@ public class APIRequest {
 
     private JsonObject response;
 
+    /**
+     * Constructor, set server information, and the query string
+     * @param protocol Server protocol (usually http)
+     * @param server Server web address
+     * @param requestURL DNW API endpoint (/api/update etc)
+     * @param query The query string (?query="haow")
+     */
     public APIRequest(String protocol, String server, String requestURL, String query) {
         try {
             requestURI = new URI(protocol, server, requestURL, query, null);
@@ -45,6 +55,9 @@ public class APIRequest {
         }
     }
 
+    /**
+     * Send the request and store the response
+     */
     public void send() {
         try {
             connection = requestURL.openConnection();
@@ -64,10 +77,18 @@ public class APIRequest {
         }
     }
 
+    /**
+     * @return JsonObject of the response
+     */
     public JsonObject getResponse() {
         return response;
     }
 
+    /**
+     * Same as getResponse().get(data)
+     * @param data Data to get from the response
+     * @return JsonData from the JsonObject response
+     */
     public JsonData get(String data) {
         return response.get(data);
     }

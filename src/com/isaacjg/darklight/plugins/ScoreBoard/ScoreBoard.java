@@ -41,15 +41,27 @@ public class ScoreBoard extends Plugin {
     private String protocol, server, session;
     private String key;
 
+    /**
+     * Default constructor
+     * @param accessHandler Inherited from {@link com.ijg.darklight.sdk.core.Plugin}
+     */
     public ScoreBoard(AccessHandler accessHandler) {
         super(accessHandler);
         namePrompt = new NamePrompt();
     }
 
+    /**
+     * To be called on construction of plugin (after instantiation, before the engine is starts)
+     * Sets the valid names to be used as team names, if this is not called, validation will not be used
+     * @param validNames Array of valid team names
+     */
     public void setValidNames(String[] validNames) {
         namePrompt.setValidNames(validNames);
     }
 
+    /**
+     * Inherited
+     */
     @Override
     protected void start() {
         namePrompt.prompt();
@@ -66,10 +78,12 @@ public class ScoreBoard extends Plugin {
     }
 
     @Override
-    protected void kill() {
+    protected void kill() {}
 
-    }
-
+    /**
+     * Send an auth request to the Darklight Nova Web server
+     * @return True if the auth returned a 200 status code, false if it failed
+     */
     private boolean auth() {
         boolean retrVal = false;
 
@@ -95,6 +109,10 @@ public class ScoreBoard extends Plugin {
         return retrVal;
     }
 
+    /**
+     * Send an update request to the Darklight Nova Web server
+     * @return True if a 200 status code was received, false if the request failed
+     */
     private boolean update() {
         boolean retrVal = false;
 
@@ -125,6 +143,10 @@ public class ScoreBoard extends Plugin {
         return retrVal;
     }
 
+    /**
+     * Write the key file with the key retrieved from the DNW server
+     * @return True if success, false if it failed
+     */
     private boolean writeKey() {
         if (!key.isEmpty()) {
             File keyFile = new File("key");
@@ -143,6 +165,10 @@ public class ScoreBoard extends Plugin {
         return false;
     }
 
+    /**
+     * Get the key out of the key file
+     * @return True if the key was retrieved, false if not
+     */
     private boolean getKey() {
         key = "";
         File keyFile = new File("key");
@@ -157,15 +183,42 @@ public class ScoreBoard extends Plugin {
         return true;
     }
 
+    /**
+     * Set the team name
+     * @param name The name to use
+     */
     public void setTeamName(String name) { this.name = name; }
+
+    /**
+     * Get the team name
+     * @return The team name
+     */
     public String getTeamName() { return name; }
 
+    /**
+     * Set the server information
+     * @param protocol Server protocol (usually http)
+     * @param server Web address
+     * @param session Session name (codename in DNW)
+     */
     public void setServerInfo(String protocol, String server, String session) {
         this.protocol = protocol;
         this.server = server;
         this.session = session;
     }
+
+    /**
+     * @return Get server protocol
+     */
     public String getProtocol() { return protocol; }
+
+    /**
+     * @return Get server address
+     */
     public String getServer() { return server; }
+
+    /**
+     * @return Get the session name
+     */
     public String getSession() { return session; }
 }
