@@ -1,9 +1,24 @@
-ScoreBoard
-==========
+Darklight Nova Core Plugin: ScoreBoard
+======================================
 
-Plugin for Darklight Nova Core to report scores to a web server
+Plugin for [Darklight Nova Core](https://github.com/darklight-studios/darklight-nova-core)
 
-# Note that this plugin is a work in progress, and is not ready for use yet
+### Function
+The ScoreBoard plugin reports the client score to the [DNW server](https://github.com/darklight-studios/darklight-nova-web)
+ to allow for a live score board during a session
+
+### Use
+1. Download the latest version from the [releases](https://github.com/darklight-studios/ScoreBoard/releases) section
+2. Add DNCScoreBoard.jar to your DNC build path
+3. Create a new ScoreBoard object (needs an AccessHandler for the constructor): `ScoreBoard scoreBoard = new scoreBoard(accessHandler);`
+4. Set the DNW server information: `scoreBoard.setServerInfo("https", "darklight-nova-web.herokuapp.com", "test session");`
+5. (Optional) Set valid team names: `scoreBoard.setValidNames(new String[] { "Team 1", "The pro Team", "Test team" });`
+6. Add `scoreBoard` to the plugins array in CoreEngine
+7. Start DNC!
+
+### Screenshot
+![Screenshot 1](http://puu.sh/5WeOS.png)
+![Screenshot 2](http://puu.sh/5WePW.png)
 
 # API Spec
 This is the specification of the API that this plugin requires (implemented in [Darklight Nova Web](https://github.com/darklight-studios/darklight-nova-web)
@@ -47,3 +62,10 @@ All responses are sent as valid JSON.
 * **Sample Query**
     * https://darklight-nova-web.herokuapp.com/api/update?key=keyreturnedfromauth&issues={"issue1": "description of issue1"}
     * Note that the URL must be properly encoded
+
+
+### License
+[GPLv3](/LICENSE)
+
+### Contributors
+[@IsaacJG](https://github.com/IsaacJG)
