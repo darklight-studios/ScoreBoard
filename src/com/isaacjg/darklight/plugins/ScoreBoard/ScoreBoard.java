@@ -70,6 +70,18 @@ public class ScoreBoard extends Plugin {
         if (getKey()) {
             if (update()) {
                 System.out.println("[ScoreBoard] Successfully authorized with the DNW server");
+                Thread updater = new Thread(new Runnable() {
+                    public void run() {
+                        long lastUpdate = System.currentTimeMillis();
+                        while (true) {
+                            if (System.currentTimeMillis() - lastUpdate >= 10000) {
+                                update();
+                                lastUpdate = System.currentTimeMillis();
+                            }
+                        }
+                    }
+                }, "updater");
+                updater.start();
             }
         } else {
             auth();
@@ -91,7 +103,12 @@ public class ScoreBoard extends Plugin {
         APIRequest request = new APIRequest(protocol, server, "/api/" + session + "/auth", "name=" + name);
         request.send();
 
-        long statusCode = ((JsonPrimitive) request.get("status")).getData();
+        long statusCode = 0L;
+        try {
+            statusCode = ((JsonPrimitive) request.get("status")).getData();
+        } catch (NullPointerException e) {
+            System.out.println("[ScoreBoard] Error: Something went wrong with the request, server is probably down");
+        }
         switch ((int) statusCode) {
             case 200:
             case 201:
@@ -120,15 +137,38 @@ public class ScoreBoard extends Plugin {
         String issueString = "{";
         IssueData[] issues = accessHandler.getFixedIssues();
         for (int i = 0; i < issues.length-1; i++) {
-            issueString += '\"' + issues[i].getName() + "\": \"" + issues[i].getDescription() + "\", ";
+            issueString += '\"' + issues[i].getName() + "\": \"";
+            String desc = issues[i].getDescription();
+            for (int j = 0; j < desc.length(); j++) {
+                if (desc.charAt(j) == '"') {
+                    desc = desc.substring(0, j) + "\\" +  desc.substring(j);
+                    j++;
+                }
+            }
+            issueString += desc + "\", ";
         }
-        if (issues.length > 0) issueString += '\"' + issues[issues.length-1].getName() + "\": \"" + issues[issues.length-1].getDescription() + "\"}";
-        else issueString += "}";
+        if (issues.length > 0) {
+            issueString += '\"' + issues[issues.length-1].getName() + "\": \"";
+            String desc = issues[issues.length-1].getDescription();
+            for (int i = 0; i < desc.length(); i++) {
+                if (desc.charAt(i) == '"') {
+                    desc = desc.substring(0, i) + "\\" +  desc.substring(i);
+                    i++;
+                }
+            }
+            issueString += desc + '\"';
+        }
+        issueString += "}";
 
         APIRequest request = new APIRequest(protocol, server, "/api/update", "key=" + key + "&issues=" + issueString);
         request.send();
 
-        long statusCode = ((JsonPrimitive) request.get("status")).getData();
+        long statusCode = 0L;
+        try {
+            statusCode = ((JsonPrimitive) request.get("status")).getData();
+        } catch (NullPointerException e) {
+            System.out.println("[ScoreBoard] Error: Something went wrong with the request, server is probably down");
+        }
         switch ((int) statusCode) {
             case 200:
             case 201: retrVal = true;
