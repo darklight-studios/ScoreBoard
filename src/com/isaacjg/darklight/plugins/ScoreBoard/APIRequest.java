@@ -51,7 +51,7 @@ public class APIRequest {
             this.requestURL = requestURI.toURL();
         } catch (URISyntaxException | MalformedURLException e) {
             System.out.println("[ScoreBoard] Error creating URI/URL");
-            e.printStackTrace();;
+            e.printStackTrace();
         }
     }
 
@@ -88,8 +88,9 @@ public class APIRequest {
      * Same as getResponse().get(data)
      * @param data Data to get from the response
      * @return JsonData from the JsonObject response
+     * @throws NullPointerException If the response object is empty, non-initialized, etc
      */
-    public JsonData get(String data) {
+    public JsonData get(String data) throws NullPointerException {
         return response.get(data);
     }
 }
