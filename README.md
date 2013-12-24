@@ -31,8 +31,6 @@ All responses are sent as valid JSON.
 	* If the team does not already exist
     	* Create a new team with the given name
     	* Generate a key for the team, which is returned
-	* If the team does exist
-		* Return the team's unique key
 * **Query**
     * **name:** team/individual name
 * **Response**
@@ -51,9 +49,10 @@ All responses are sent as valid JSON.
     * Update a team's score and found issues
 * **Query**
     * **key:** team's unique key returned from auth
-    * **issues:** JSON object of found issues
+    * **issues:** (optional) JSON object of found issues
 * **Response**
     * **description:** if the request failed, this will have a description of the failure, or a stacktrace
+    * **name:** the name of the team being updated
 * **Status**
     * **200**: success (nothing was changed)
     * **201**: success
