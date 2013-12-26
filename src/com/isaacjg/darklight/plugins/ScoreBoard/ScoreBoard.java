@@ -70,23 +70,24 @@ public class ScoreBoard extends Plugin {
         if (getKey()) {
             if (update()) {
                 System.out.println("[ScoreBoard] Successfully authorized with the DNW server");
-                Thread updater = new Thread(new Runnable() {
-                    public void run() {
-                        long lastUpdate = System.currentTimeMillis();
-                        while (true) {
-                            if (System.currentTimeMillis() - lastUpdate >= 10000) {
-                                update();
-                                lastUpdate = System.currentTimeMillis();
-                            }
-                        }
-                    }
-                }, "updater");
-                updater.start();
             }
         } else {
             auth();
             writeKey();
         }
+        Thread updater = new Thread(new Runnable() {
+            public void run() {
+                long lastUpdate = System.currentTimeMillis();
+                while (true) {
+                    if (System.currentTimeMillis() - lastUpdate >= 10000) {
+                        update();
+                        lastUpdate = System.currentTimeMillis();
+                    }
+                }
+            }
+        }, "updater");
+        updater.start();
+
         namePrompt = null;
     }
 
